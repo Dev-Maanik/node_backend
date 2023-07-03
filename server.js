@@ -19,4 +19,4 @@ db.once("open", () => {
 
 app.listen(serverConfig.PORT, () => {
     console.log('server started on the port number ${serverConfig.PORT}');
-})
+});

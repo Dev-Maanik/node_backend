@@ -2,6 +2,7 @@ const express = require('express');
 const serverConfig = require('./config/server.config');
 const mongoose = require('mongoose');
 const dbConfig = require('./config/db.config');
+const userModel = require('./models/user.model');
 
 const app = express();
 
@@ -14,7 +15,19 @@ db.on("error", () => {
 
 db.once("open", () => {
     console.log("DB is connected");
-});
+
+    init();
+})
+
+function init() {
+    userModel.create({
+        name: "Maanik",
+        userId: "admin",
+        email: "gargruchimay1984@gmail.com",
+        userType: "ADMIN",
+        password: "Welcome2"
+    })
+}
 
 
 app.listen(serverConfig.PORT, () => {

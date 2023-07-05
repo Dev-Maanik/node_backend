@@ -1,11 +1,18 @@
 const express = require('express');
-const serverConfig = require('./config/server.config');
+const serverConfig = require('./configs/server.config');
 const mongoose = require('mongoose');
-const dbConfig = require('./config/db.config');
+const dbConfig = require('./configs/db.config');
 const userModel = require('./models/user.model');
+const bcrypt = require('bcrypt');
+
 
 const app = express();
 
+
+/**
+ * Logic to connect to MongoDB and create an ADMIN user
+ * Need to have the mongodb up and running in your local machine
+ */
 mongoose.connect(dbConfig.DB_URL);
 const db = mongoose.connection;
 
@@ -19,17 +26,34 @@ db.once("open", () => {
     init();
 })
 
-function init() {
-    userModel.create({
+async function init() {
+
+    /**
+     * Check if the admin user is already present
+     */
+    let admin = await userModel.findOne({
+        userId: "admin"
+    })
+
+    if (admin) {
+        console.log("Admin user already present");
+        return;
+    }
+
+    admin = await userModel.create({
         name: "Maanik",
         userId: "admin",
-        email: "gargruchimay1984@gmail.com",
+        email: "gargruchimay1984",
         userType: "ADMIN",
-        password: "Welcome2"
-    })
+        password: bcrypt.hashSync("Welcome1", 8)
+    });
+    console.log(admin);
+
+
 }
 
 
+
 app.listen(serverConfig.PORT, () => {
-    console.log('server started on the port number ${serverConfig.PORT}');
-});
+    console.log(`server started on the port number ${serverConfig.PORT}`);
+})

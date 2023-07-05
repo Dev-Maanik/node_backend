@@ -1,38 +1,48 @@
+/**
+ * This will hold the schema for the user
+ * 
+ * It explains the different fields of use and how it will be
+ * stored in the mongodb
+ */
+
 const mongoose = require('mongoose');
 
+
 const userSchema = new mongoose.Schema({
+
     name: {
-        type: string,
+        type: String,
         required: true
     },
-
     userId: {
-        type: string,
+        type: String,
         required: true,
         unique: true
     },
-
     password: {
-        type: string,
+        type: String,
         required: true
     },
-
     email: {
-        type: string,
+        type: String,
         required: true,
         unique: true,
         minLength: 10,
         lowercase: true
-    },
 
+    },
     userType: {
-        type: string,
+        type: String,
         required: true,
-        default: "CUSTOMER",
+        deafult: "CUSTOMER",
         enum: ["CUSTOMER", "ADMIN"]
     }
 
+
 }, { timestamps: true });
 
+/**
+ * Define the collection name where it will be stored
+ */
 
 module.exports = mongoose.model("User", userSchema);
